@@ -33,6 +33,7 @@ interface Food {
   name: string;
   description: string;
   price: number;
+  category: number;
   thumbnail_url: string;
   formattedPrice: string;
 }
@@ -60,12 +61,15 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     async function loadFoods(): Promise<void> {
       // Load Foods from API
-      const response = await api.get('foods')
+      const response = await api.get('foods', {
+        params: {category_like: selectedCategory,
+                 name_like: searchValue //propriedade _like faz o sql da o comando like
+        }
+      })
 
       setFoods(response.data)
 
     }
-
     loadFoods();
   }, [selectedCategory, searchValue]);
 
@@ -82,7 +86,9 @@ const Dashboard: React.FC = () => {
   }, []);
 
   function handleSelectCategory(id: number): void {
-    // Select / deselect category
+    //Desselect
+    // Load Foods from API
+    setSelectedCategory(id)
   }
 
   return (
